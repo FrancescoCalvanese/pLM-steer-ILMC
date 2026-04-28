@@ -1,0 +1,76 @@
+[project]
+name = "plm-steer"
+version = "0.1.0"
+description = "Utils for steering pre-trained protein language models"
+readme = "README.md"
+requires-python = ">=3.10, <3.13"
+dependencies = [
+    "torch",        
+    "tqdm",
+    "biopython",
+    "numpy"
+]
+
+[project.optional-dependencies]
+base = [
+    "torch==2.6",
+    "transformers",
+    "tokenizers",
+    "accelerate",
+    "ipykernel",
+    "matplotlib",
+    "seaborn",
+    "pandas",
+    "scikit-learn",
+    "editdistance",
+]
+progen3 = [
+    "torch==2.5.0", # Specific version for ProGen3 compatibility
+    "datasets",
+    "peft==0.17",
+    "ipykernel",
+    "wheel"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/plm_steer"]
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.pypi-options]
+index-strategy = "unsafe-best-match"
+
+[tool.pixi.feature.base.pypi-dependencies]
+plm-steer = { path = ".", editable = true, extras = ["base"] }
+
+[tool.pixi.feature.base.pypi-options]
+extra-index-urls = ["https://download.pytorch.org/whl/cu124"]
+
+[tool.pixi.feature.progen3.pypi-dependencies]
+progen3 = { path = "third_party/progen3" }
+plm-steer = { path = ".", editable = true, extras = ["progen3"] } 
+
+[tool.pixi.feature.progen3.pypi-options]
+extra-index-urls = ["https://download.pytorch.org/whl/cu124"]
+
+[tool.pixi.environments]
+default = ["base"]
+progen3 = ["progen3"]
+
+[tool.pixi.tasks]
+check-gpu = "python scripts/check_envs.py"
+setup-kernel = "python -m ipykernel install --user --name"
+
+[tool.pixi.feature.base.tasks]
+base-train = { cmd = "python src/plm_steer/scripts/base/train.py", env = { PIXI_ENVIRONMENT_NAME = "default" }  }
+base-run-mc = { cmd = "python src/plm_steer/scripts/base/run_block_mc.py", env = { PIXI_ENVIRONMENT_NAME = "default" }  }
+
+[tool.pixi.feature.progen3.tasks]
+progen-finetune = { cmd = "python src/plm_steer/scripts/progen/finetune.py", env = { PIXI_ENVIRONMENT_NAME = "progen3" } }
+progen-run-mc = { cmd = "python src/plm_steer/scripts/progen/run_block_mc.py", env = { PIXI_ENVIRONMENT_NAME = "progen3" } }
