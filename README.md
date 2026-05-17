@@ -10,6 +10,13 @@ The package supports both custom GPT-style transformer models and the ProGen3 mo
 
 The `Classifier_Steering/` folder is a self-contained comparison of FUDGE and ILMC steering using a any-prefix classifier. It includes the data, checkpoints, sampling utilities, and Jupyter notebooks needed to train/evaluate the classifier and run classifier-guided sampling experiments.
 
+This repository is the accompanying code for our paper:
+
+**Steering Sequence Generation in Protein Language Models through Iterative Lookback Monte Carlo Sampling**  
+Francesco Calvanese, Gianluca Lombardi, Martin Weigt, Jorge Fernandez-de-Cossio-Diaz  
+bioRxiv 2026.05.01.722156; doi: https://doi.org/10.64898/2026.05.01.722156  
+Link: [https://www.biorxiv.org/content/10.64898/2026.05.01.722156](https://www.biorxiv.org/content/10.64898/2026.05.01.722156)
+
 ## Features
 
 - **Custom Potentials**: Define and combine multiple steering potentials (e.g., sequence similarity, amino acid enrichment ratios for thermostability)
